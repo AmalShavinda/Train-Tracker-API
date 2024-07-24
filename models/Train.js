@@ -5,6 +5,10 @@ const TrainSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    routeName: {
+        type: String,
+        required: true
+    },
     latitude: {
         type: String,
         required: true
@@ -16,5 +20,7 @@ const TrainSchema = new mongoose.Schema({
     date : {
         type: Date,
         required: true
-    }
+    },
+
+
 })

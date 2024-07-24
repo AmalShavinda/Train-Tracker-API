@@ -1,6 +1,11 @@
 import express from "express"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
+import cors from "cors"
+// import trainRoute from "./routes/trainRoute.js"
+import authRoute from "./routes/authRoute.js"
+
 
 const app = express()
 
@@ -18,6 +23,14 @@ const connect = async () => {
         console.log("MongoDB Disconnected")
     })
 }
+
+// Middlewares
+app.use(express.json())
+app.use(cors())
+app.use(cookieParser())
+
+app.use('/api/auth', authRoute)
+// app.use('/api/train', trainRoute)
 
 app.listen(8800, () => {
     connect()
