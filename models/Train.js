@@ -9,13 +9,17 @@ const TrainSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  latitude: {
+  location: {
     type: String,
     default: ""
   },
+  latitude: {
+    type: Number,
+    default: 0
+  },
   longitude: {
-    type: String,
-    default: ""
+    type: Number,
+    default: 0
   },
 });
 
