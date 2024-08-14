@@ -25,7 +25,7 @@ const connect = async () => {
     })
 }
 
-updateTrainLocation();
+// updateTrainLocation();
 
 // Middlewares
 app.use(express.json())
