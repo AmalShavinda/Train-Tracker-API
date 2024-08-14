@@ -1,4 +1,5 @@
 import Train from "../models/Train.js";
+import TrainHistory from "../models/TrainHistory.js";
 import { route1 } from "../utils/trainRouteData.js";
 import getCoordinatesFromOSMId from "../utils/getCoordinatesFromOSMId .js";
 
@@ -59,9 +60,21 @@ export const updateTrainLocation = async (req, res, next) => {
             longitude,
           }
         );
-        console.log(trainName)
+        console.log(trainName);
         console.log(
           `Train location updated to ${location}: (${latitude}, ${longitude})`
+        );
+
+        //history data
+        const currentDate = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
+        const historyRecord = await TrainHistory.findOneAndUpdate(
+          { trainName, date: currentDate },
+          {
+            $push: {
+              locations: { latitude, longitude, arrivalTime: new Date() },
+            },
+          },
+          { upsert: true, new: true }
         );
 
         currentIndex = (currentIndex + 1) % route1.length;
@@ -91,9 +104,29 @@ export const getAllTrains = async (req, res, next) => {
 
 export const getTrainById = async (req, res, next) => {
   try {
-    const train = await Train.findById(req.params.id);
-    res.status(200).json(train);
+    const train = await Train.findById(req.params.id); // Using findById for better readability
+
+    if (!train) {
+      return res.status(404).json({ message: "Train not found" }); // Return JSON response
+    }
+
+    res.status(200).json({
+      latitude: train.latitude,
+      longitude: train.longitude,
+      location: train.location,
+    });
   } catch (error) {
-    next(error);
+    console.error("Error fetching train data:", error); // Log the error for debugging
+    res.status(500).json({ message: "Server Error" }); // Return a JSON error response
   }
 };
+
+
+// export const getTrainById = async (req, res, next) => {
+//   try {
+//     const train = await Train.findById(req.params.id);
+//     res.status(200).json(train);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
