@@ -47,6 +47,10 @@ app.get('/', (req, res) => {
   res.send('Hello World')
 });
 
+app.get('/api/test', (req, res) => {
+  res.send('Hello World Test')
+});
+
 app.use("/api/auth", authRoute);
 app.use("/api/train", trainRoute);
 
