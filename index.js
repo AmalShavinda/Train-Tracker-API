@@ -14,9 +14,14 @@ const app = express();
 
 dotenv.config();
 
+const options = {
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+};
+
 const connect = async () => {
   try {
-    await mongoose.connect(process.env.MONGO);
+    await mongoose.connect(process.env.MONGO, options);
     console.log("Connected to mongoDB");
   } catch (error) {
     throw error;
