@@ -39,7 +39,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/train", trainRoute);
 
-app.listen(8800, () => {
+app.listen( process.env.PORT ||8800, () => {
   connect();
-  console.log("Server run on port 8800");
+  console.log(`Server run on port ${process.env.PORT || '8800'}`);
 });
