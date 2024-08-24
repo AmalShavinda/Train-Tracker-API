@@ -31,11 +31,6 @@ export const route1 = [
   },
   {
     trainName: "Ruhunu Kumari",
-    location: "Waligama",
-    coordinates: "2418525046",
-  },
-  {
-    trainName: "Ruhunu Kumari",
     location: "Habaraduwa",
     coordinates: "311177767",
   },
@@ -77,7 +72,7 @@ export const route1 = [
   {
     trainName: "Ruhunu Kumari",
     location: "Panadura",
-    coordinates: "52056585",
+    coordinates: "92056585",
   },
   {
     trainName: "Ruhunu Kumari",
@@ -114,11 +109,6 @@ export const route2 = [
   },
   {
     trainName: "Galu Kumari",
-    location: "Waligama",
-    coordinates: "2418525046",
-  },
-  {
-    trainName: "Galu Kumari",
     location: "Habaraduwa",
     coordinates: "311177767",
   },
@@ -160,7 +150,7 @@ export const route2 = [
   {
     trainName: "Galu Kumari",
     location: "Panadura",
-    coordinates: "52056585",
+    coordinates: "92056585",
   },
   {
     trainName: "Galu Kumari",

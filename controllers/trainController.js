@@ -15,6 +15,22 @@ export const createTrain = async (req, res, next) => {
   }
 };
 
+export const updateTrain = async (req, res, next) => {
+  try {
+    const updatedTrain = await Train.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body },
+      { new: true }
+    );
+    if (!updatedTrain) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(updatedTrain);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const removeTrain = async (req, res, next) => {
   try {
     await Train.findByIdAndDelete(req.params.id);
@@ -50,12 +66,17 @@ export const updateTrain1Location = async (req, res, next) => {
         );
 
         //history data
-        const currentDate = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
+        const currentDate = new Date().toISOString().split('T')[0];
         const historyRecord = await TrainHistory.findOneAndUpdate(
           { trainName, date: currentDate },
           {
             $push: {
-              locations: { latitude, longitude, arrivalTime: new Date() },
+              locations: {
+                location,
+                latitude,
+                longitude,
+                arrivalTime: new Date(),
+              },
             },
           },
           { upsert: true, new: true }
@@ -108,7 +129,12 @@ export const updateTrain2Location = async (req, res, next) => {
           { trainName, date: currentDate },
           {
             $push: {
-              locations: { latitude, longitude, arrivalTime: new Date() },
+              locations: {
+                location,
+                latitude,
+                longitude,
+                arrivalTime: new Date(),
+              },
             },
           },
           { upsert: true, new: true }
@@ -161,7 +187,12 @@ export const updateTrain3Location = async (req, res, next) => {
           { trainName, date: currentDate },
           {
             $push: {
-              locations: { latitude, longitude, arrivalTime: new Date() },
+              locations: {
+                location,
+                latitude,
+                longitude,
+                arrivalTime: new Date(),
+              },
             },
           },
           { upsert: true, new: true }
