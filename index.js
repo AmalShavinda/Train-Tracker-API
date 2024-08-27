@@ -12,8 +12,11 @@ import {
   updateTrain2Location,
   updateTrain3Location,
 } from "./controllers/trainController.js";
+import engineRoute from "./routes/engineRoute.js";
 import swaggerUi from "swagger-ui-express";
-import swaggerJsdoc from "swagger-jsdoc";
+import YAML from "yamljs";
+
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 const app = express();
 
@@ -39,7 +42,7 @@ const connect = async () => {
   });
 };
 
-updateTrain1Location();
+// updateTrain1Location();
 // updateTrain2Location();
 // updateTrain3Location();
 
@@ -47,44 +50,13 @@ updateTrain1Location();
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-
-// app.get('/', (req, res) => {
-//   res.send('Hello World')
-// });
-
-// app.get('/api/test', (req, res) => {
-//   res.send('Hello World Test')
-// });
-
-// Define Swagger options
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "EventZing - Event Management App",
-      version: "1.0.0",
-      description: "API Documentation for Event Management.",
-    },
-    servers: [
-      {
-        url: "https://13.60.80.168:5000",
-        description: "AWS server",
-      },
-    ],
-  },
-  apis: ["./routes/*.js"], // Path to the API routes files
-};
-
-// Initialize Swagger specs
-const swaggerSpecs = swaggerJsdoc(options);
-
-// Serve Swagger documentation
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+// app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/auth", authRoute);
 app.use("/api/train", trainRoute);
 app.use("/api/users", userRoute);
 app.use("/api/train-history", trainHistoryRoute);
+app.use("/api/engine", engineRoute);
 
 app.listen(process.env.PORT || 8800, () => {
   connect();
