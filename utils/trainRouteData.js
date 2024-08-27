@@ -241,3 +241,144 @@ export const route3 = [
     coordinates: "1173326087",
   },
 ];
+
+export const route4 = {
+  // engineId: engineId,
+  routeId: "R001",
+  stops: [
+    {
+      location: "Beliatta",
+      coordinates: "3634859066",
+    },
+    {
+      location: "Wewrukannala",
+      coordinates: "6402509511",
+    },
+    {
+      location: "Bambaranda",
+      coordinates: "5345933452",
+    },
+    {
+      location: "Kakanadura",
+      coordinates: "7483359602",
+    },
+    {
+      location: "Mirissa",
+      coordinates: "3092545086",
+    },
+    {
+      location: "Waligama",
+      coordinates: "2418525046",
+    },
+    {
+      location: "Habaraduwa",
+      coordinates: "311177767",
+    },
+    {
+      location: "Gintota",
+      coordinates: "91036830",
+    },
+    {
+      location: "Dodanduwa",
+      coordinates: "92124678",
+    },
+    {
+      location: "Hikkaduwa",
+      coordinates: "92126801",
+    },
+    {
+      location: "Madampanagama",
+      coordinates: "92128330",
+    },
+    {
+      location: "Pathagama",
+      coordinates: "2910213593",
+    },
+    {
+      location: "Beruwala",
+      coordinates: "1138480606",
+    },
+    {
+      location: "Kalutara",
+      coordinates: "92057835",
+    },
+    {
+      location: "Panadura",
+      coordinates: "92056585",
+    },
+    {
+      location: "Moratuwa",
+      coordinates: "2681885364",
+    },
+    {
+      location: "Dehiwala",
+      coordinates: "10046923330",
+    },
+    {
+      location: "Maradana",
+      coordinates: "5847983789",
+    },
+  ],
+};
+
+export const route5 = {
+  trainName: "Rajarata Rajina",
+  stops: [
+    {
+      location: "Maradana",
+      coordinates: "5847983789",
+    },
+    {
+      location: "Kalaniya",
+      coordinates: "2648621439",
+    },
+    {
+      location: "Horape",
+      coordinates: "5769656116",
+    },
+    {
+      location: "Yagoda",
+      coordinates: "5769656114",
+    },
+    {
+      location: "Keenawala",
+      coordinates: "3092295473",
+    },
+    {
+      location: "Ambepussa",
+      coordinates: "347323242",
+    },
+    {
+      location: "Polgahawela",
+      coordinates: "1140291390",
+    },
+    {
+      location: "Wellawa",
+      coordinates: "1728286790",
+    },
+    {
+      location: "Timbiriyagedara",
+      coordinates: "3093068369",
+    },
+    {
+      location: "Moragollagama",
+      coordinates: "3092551270",
+    },
+    {
+      location: "Kalawewa",
+      coordinates: "3092276619",
+    },
+    {
+      location: "Habarana",
+      coordinates: "1169246067",
+    },
+    {
+      location: "Galoya",
+      coordinates: "1169246212",
+    },
+    {
+      location: "Polonnaruwa",
+      coordinates: "1173326087",
+    },
+  ],
+};
