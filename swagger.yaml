@@ -1,67 +1,314 @@
 openapi: 3.0.0
 info:
-  title: Train Management API
-  description: API documentation for Train Management System
+  title: Train Tracker API
   version: 1.0.0
-servers:
-  - url: http://localhost:8800/api
+  description: API documentation for the Train Tracker system
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Train:
+      type: object
+      required:
+        - trainName
+        - routeName
+      properties:
+        trainName:
+          type: string
+          description: The name of the train
+        routeName:
+          type: string
+          description: The name of the route the train follows
+        location:
+          type: string
+          description: The current location of the train
+        latitude:
+          type: number
+          description: The current latitude of the train
+        longitude:
+          type: number
+          description: The current longitude of the train
+      example:
+        trainName: Express Train
+        routeName: Route 1
+        location: Station A
+        latitude: 40.7128
+        longitude: -74.0060
+
+    User:
+      type: object
+      required:
+        - firstname
+        - username
+        - email
+        - password
+      properties:
+        firstname:
+          type: string
+          description: The first name of the user
+        username:
+          type: string
+          description: The unique username of the user
+        email:
+          type: string
+          description: The unique email address of the user
+        password:
+          type: string
+          description: The user's password (hashed)
+        isAdmin:
+          type: boolean
+          description: Indicates if the user has admin privileges
+      example:
+        firstname: John
+        username: john_doe
+        email: john@example.com
+        password: hashedpassword123
+        isAdmin: false
+
+    Engine:
+      type: object
+      required:
+        - engineId
+        - engineType
+        - engineRoute
+        - status
+      properties:
+        engineId:
+          type: string
+          description: Unique identifier for the engine
+        engineType:
+          type: string
+          description: Type of the engine
+        engineRoute:
+          type: string
+          description: Route assigned to the engine
+        status:
+          type: string
+          description: Status of the engine
+
+    TrainHistory:
+      type: object
+      required:
+        - trainName
+        - date
+        - locations
+      properties:
+        trainName:
+          type: string
+          description: Name of the train
+        date:
+          type: string
+          format: date
+          description: The date of the train history
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+          description: List of locations with their coordinates and arrival times
+
+security:
+  - bearerAuth: []
 
 paths:
-  /auth/login:
-    post:
-      summary: User Login
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-              required:
-                - username
-                - password
-      responses:
-        "200":
-          description: Successfully logged in
-        "401":
-          description: Unauthorized
-
-  /auth/register:
-    post:
-      summary: User Registration
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstname:
-                  type: string
-                username:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-              required:
-                - firstname
-                - username
-                - email
-                - password
-      responses:
-        "201":
-          description: User registered successfully
-        "400":
-          description: Bad request
-
-  /train/add:
+  /api/train/add:
     post:
       summary: Add a new train
+      tags: [Trains]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Train'
+      responses:
+        '201':
+          description: Train added successfully
+        '400':
+          description: Invalid input
+
+  /api/train/update-train/{id}:
+    put:
+      summary: Update a train by ID
+      tags: [Trains]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The train ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Train'
+      responses:
+        '200':
+          description: Train updated successfully
+        '404':
+          description: Train not found
+        '400':
+          description: Invalid input
+
+  /api/train/remove/{id}:
+    delete:
+      summary: Remove a train by ID
+      tags: [Trains]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The train ID
+      responses:
+        '200':
+          description: Train removed successfully
+        '404':
+          description: Train not found
+
+  /api/train/get-trains:
+    get:
+      summary: Get all trains
+      tags: [Trains]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of all trains
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Train'
+
+  /api/train/get-train/{id}:
+    get:
+      summary: Get a train by ID
+      tags: [Trains]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The train ID
+      responses:
+        '200':
+          description: Train data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Train'
+        '404':
+          description: Train not found
+
+  /api/users/get-users:
+    get:
+      summary: Get all users
+      tags: [Users]
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /api/users/get-user/{id}:
+    get:
+      summary: Get a user by ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The user ID
+      responses:
+        '200':
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+  /api/users/update-user/{id}:
+    put:
+      summary: Update a user by ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The user ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully
+        '404':
+          description: User not found
+        '400':
+          description: Invalid input
+
+  /api/users/remove/{id}:
+    delete:
+      summary: Remove a user by ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The user ID
+      responses:
+        '200':
+          description: User removed successfully
+        '404':
+          description: User not found
+
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid input
+
+  /api/auth/login:
+    post:
+      summary: User login
+      tags: [Auth]
       requestBody:
         required: true
         content:
@@ -69,237 +316,142 @@ paths:
             schema:
               type: object
               properties:
-                trainName:
+                username:
                   type: string
-                routeName:
+                password:
                   type: string
               required:
-                - trainName
-                - routeName
+                - username
+                - password
+              example:
+                username: john_doe
+                password: password123
       responses:
-        "201":
-          description: Train added successfully
-        "400":
-          description: Bad request
+        '200':
+          description: User logged in successfully
+        '401':
+          description: Invalid credentials
 
-  # /train/get-trains:
-  #   get:
-  #     summary: Get all trains
-  #     responses:
-  #       '200':
-  #         description: A list of trains
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 type: object
-  #                 properties:
-  #                   trainName:
-  #                     type: string
-  #                   routeName:
-  #                     type: string
+  /api/engine/add:
+    post:
+      summary: Add a new engine
+      tags: [Engines]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Engine'
+      responses:
+        '201':
+          description: Engine added successfully
 
-  # /train/get-train/{id}:
-  #   get:
-  #     summary: Get train by ID
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         required: true
-  #         schema:
-  #           type: string
-  #         description: The train ID
-  #     responses:
-  #       '200':
-  #         description: Train details
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 trainName:
-  #                   type: string
-  #                 routeName:
-  #                   type: string
-  #       '404':
-  #         description: Train not found
+  /api/engine/get-engines:
+    get:
+      summary: Get all engines
+      tags: [Engines]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of all engines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Engine'
 
-  # /train-history:
-  #   get:
-  #     summary: Get train history by date
-  #     parameters:
-  #       - in: query
-  #         name: date
-  #         required: true
-  #         schema:
-  #           type: string
-  #           format: date-time
-  #         description: The date to get the train history for
-  #     responses:
-  #       '200':
-  #         description: Train history data
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #       '404':
-  #         description: Train history not found
+  /api/engine/get-engine/{id}:
+    get:
+      summary: Get an engine by ID
+      tags: [Engines]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The engine ID
+      responses:
+        '200':
+          description: Engine data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Engine'
+        '404':
+          description: Engine not found
 
-  # /train/get-train/{trainId}:
-  #   get:
-  #     summary: Get train by train ID
-  #     parameters:
-  #       - in: path
-  #         name: trainId
-  #         required: true
-  #         schema:
-  #           type: string
-  #         description: The train ID
-  #     responses:
-  #       '200':
-  #         description: Train details
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 trainName:
-  #                   type: string
-  #                 routeName:
-  #                   type: string
-  #       '404':
-  #         description: Train not found
+  /api/engine/update-engine/{id}:
+    put:
+      summary: Update an engine by ID
+      tags: [Engines]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The engine ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Engine'
+      responses:
+        '200':
+          description: Engine updated successfully
+        '404':
+          description: Engine not found
 
-  # /train/update-train/{id}:
-  #   put:
-  #     summary: Update train details
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         required: true
-  #         schema:
-  #           type: string
-  #         description: The train ID
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               trainName:
-  #                 type: string
-  #     responses:
-  #       '200':
-  #         description: Train updated successfully
-  #       '400':
-  #         description: Bad request
-  #       '404':
-  #         description: Train not found
+  /api/engine/remove/{id}:
+    delete:
+      summary: Remove an engine by ID
+      tags: [Engines]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The engine ID
+      responses:
+        '200':
+          description: Engine removed successfully
+        '404':
+          description: Engine not found
 
-  # /train/remove/{id}:
-  #   delete:
-  #     summary: Remove a train
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         required: true
-  #         schema:
-  #           type: string
-  #         description: The train ID
-  #     responses:
-  #       '200':
-  #         description: Train removed successfully
-  #       '404':
-  #         description: Train not found
+  /api/train-history:
+    get:
+      summary: Get train history by date
+      tags: [TrainHistory]
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          required: true
+          description: The date for which to retrieve train history
+      responses:
+        '200':
+          description: Train history data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainHistory'
+        '404':
+          description: Train history not found
 
-  # /users/get-users:
-  #   get:
-  #     summary: Get all users
-  #     responses:
-  #       '200':
-  #         description: A list of users
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 type: object
-  #                 properties:
-  #                   firstname:
-  #                     type: string
-  #                   username:
-  #                     type: string
-  #                   email:
-  #                     type: string
-
-  # /users/get-user/{id}:
-  #   get:
-  #     summary: Get user by ID
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         required: true
-  #         schema:
-  #           type: string
-  #         description: The user ID
-  #     responses:
-  #       '200':
-  #         description: User details
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 firstname:
-  #                   type: string
-  #                 username:
-  #                   type: string
-  #                 email:
-  #                   type: string
-  #       '404':
-  #         description: User not found
-
-  # /users/update-user/{id}:
-  #   put:
-  #     summary: Update user details
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         required: true
-  #         schema:
-  #           type: string
-  #         description: The user ID
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               firstname:
-  #                 type: string
-  #     responses:
-  #       '200':
-  #         description: User updated successfully
-  #       '400':
-  #         description: Bad request
-  #       '404':
-  #         description: User not found
-
-  # /users/remove/{id}:
-  #   delete:
-  #     summary: Remove a user
-  #     parameters:
-  #       - in: path
-  #         name: id
-  #         required: true
-  #         schema:
-  #           type: string
-  #         description: The user ID
-  #     responses:
-  #       '200':
-  #         description: User removed successfully
-  #       '404':
-  #         description: User not found
