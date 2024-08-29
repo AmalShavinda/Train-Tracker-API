@@ -5,25 +5,25 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoute from "./routes/authRoute.js";
 import trainRoute from "./routes/trainRoute.js";
+import userRoute from "./routes/userRoutes.js";
+import trainHistoryRoute from "./routes/trainHistoryRoute.js";
 import {
   updateTrain1Location,
-  updateTrain2Location, updateTrain3Location
+  updateTrain2Location,
+  updateTrain3Location,
 } from "./controllers/trainController.js";
+import engineRoute from "./routes/engineRoute.js";
+import swaggerDocs from "./utils/swagger.js";
 
 const app = express();
 
-dotenv.config();
+const PORT = process.env.PORT;
 
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-};
+dotenv.config();
 
 const connect = async () => {
   try {
-    await mongoose.connect(process.env.MONGO, options);
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to mongoDB");
   } catch (error) {
     throw error;
@@ -34,27 +34,24 @@ const connect = async () => {
   });
 };
 
-updateTrain1Location();
-updateTrain2Location();
-updateTrain3Location();
+// updateTrain1Location();
+// updateTrain2Location();
+// updateTrain3Location();
 
 // Middlewares
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
-});
-
-app.get('/api/test', (req, res) => {
-  res.send('Hello World Test')
-});
-
 app.use("/api/auth", authRoute);
 app.use("/api/train", trainRoute);
+app.use("/api/users", userRoute);
+app.use("/api/train-history", trainHistoryRoute);
+app.use("/api/engine", engineRoute);
 
-app.listen( process.env.PORT ||8800, () => {
+swaggerDocs(app, PORT);
+
+app.listen(PORT || 8800, () => {
   connect();
-  console.log(`Server run on port ${process.env.PORT || '8800'}`);
+  console.log(`Server run on port ${process.env.PORT || "8800"}`);
 });
