@@ -13,12 +13,11 @@ import {
   updateTrain3Location,
 } from "./controllers/trainController.js";
 import engineRoute from "./routes/engineRoute.js";
-import swaggerUi from "swagger-ui-express";
-import YAML from "yamljs";
-
-const swaggerDocument = YAML.load("./swagger.yaml");
+import swaggerDocs from "./utils/swagger.js";
 
 const app = express();
+
+const PORT = process.env.PORT;
 
 dotenv.config();
 
@@ -50,7 +49,6 @@ const connect = async () => {
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-// app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/auth", authRoute);
 app.use("/api/train", trainRoute);
@@ -58,7 +56,9 @@ app.use("/api/users", userRoute);
 app.use("/api/train-history", trainHistoryRoute);
 app.use("/api/engine", engineRoute);
 
-app.listen(process.env.PORT || 8800, () => {
+swaggerDocs(app, PORT);
+
+app.listen(PORT || 8800, () => {
   connect();
   console.log(`Server run on port ${process.env.PORT || "8800"}`);
 });
