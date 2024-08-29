@@ -21,13 +21,6 @@ const PORT = process.env.PORT;
 
 dotenv.config();
 
-// const options = {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   serverSelectionTimeoutMS: 5000,
-//   socketTimeoutMS: 45000,
-// };
-
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
