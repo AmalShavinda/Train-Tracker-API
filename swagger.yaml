@@ -15,9 +15,13 @@ components:
     Train:
       type: object
       required:
+        - engineId
         - trainName
         - routeName
       properties:
+        engineId:
+          type: string
+          description: The id of the train engine
         trainName:
           type: string
           description: The name of the train
@@ -34,6 +38,7 @@ components:
           type: number
           description: The current longitude of the train
       example:
+        engineId: Engine 1
         trainName: Express Train
         routeName: Route 1
         location: Station A
@@ -108,7 +113,7 @@ components:
         locations:
           type: array
           items:
-            $ref: '#/components/schemas/Location'
+            $ref: "#/components/schemas/Location"
           description: List of locations with their coordinates and arrival times
 
 security:
@@ -124,11 +129,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Train'
+              $ref: "#/components/schemas/Train"
       responses:
-        '201':
+        "201":
           description: Train added successfully
-        '400':
+        "400":
           description: Invalid input
 
   /api/train/update-train/{id}:
@@ -147,13 +152,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Train'
+              $ref: "#/components/schemas/Train"
       responses:
-        '200':
+        "200":
           description: Train updated successfully
-        '404':
+        "404":
           description: Train not found
-        '400':
+        "400":
           description: Invalid input
 
   /api/train/remove/{id}:
@@ -168,9 +173,9 @@ paths:
           required: true
           description: The train ID
       responses:
-        '200':
+        "200":
           description: Train removed successfully
-        '404':
+        "404":
           description: Train not found
 
   /api/train/get-trains:
@@ -180,14 +185,14 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: List of all trains
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Train'
+                  $ref: "#/components/schemas/Train"
 
   /api/train/get-train/{id}:
     get:
@@ -203,13 +208,13 @@ paths:
           required: true
           description: The train ID
       responses:
-        '200':
+        "200":
           description: Train data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Train'
-        '404':
+                $ref: "#/components/schemas/Train"
+        "404":
           description: Train not found
 
   /api/users/get-users:
@@ -217,14 +222,14 @@ paths:
       summary: Get all users
       tags: [Users]
       responses:
-        '200':
+        "200":
           description: List of all users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: "#/components/schemas/User"
 
   /api/users/get-user/{id}:
     get:
@@ -238,13 +243,13 @@ paths:
           required: true
           description: The user ID
       responses:
-        '200':
+        "200":
           description: User data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '404':
+                $ref: "#/components/schemas/User"
+        "404":
           description: User not found
 
   /api/users/update-user/{id}:
@@ -263,13 +268,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
       responses:
-        '200':
+        "200":
           description: User updated successfully
-        '404':
+        "404":
           description: User not found
-        '400':
+        "400":
           description: Invalid input
 
   /api/users/remove/{id}:
@@ -284,9 +289,9 @@ paths:
           required: true
           description: The user ID
       responses:
-        '200':
+        "200":
           description: User removed successfully
-        '404':
+        "404":
           description: User not found
 
   /api/auth/register:
@@ -298,11 +303,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
       responses:
-        '201':
+        "201":
           description: User registered successfully
-        '400':
+        "400":
           description: Invalid input
 
   /api/auth/login:
@@ -327,9 +332,9 @@ paths:
                 username: john_doe
                 password: password123
       responses:
-        '200':
+        "200":
           description: User logged in successfully
-        '401':
+        "401":
           description: Invalid credentials
 
   /api/engine/add:
@@ -343,9 +348,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Engine'
+              $ref: "#/components/schemas/Engine"
       responses:
-        '201':
+        "201":
           description: Engine added successfully
 
   /api/engine/get-engines:
@@ -355,14 +360,14 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: List of all engines
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Engine'
+                  $ref: "#/components/schemas/Engine"
 
   /api/engine/get-engine/{id}:
     get:
@@ -378,13 +383,13 @@ paths:
           required: true
           description: The engine ID
       responses:
-        '200':
+        "200":
           description: Engine data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Engine'
-        '404':
+                $ref: "#/components/schemas/Engine"
+        "404":
           description: Engine not found
 
   /api/engine/update-engine/{id}:
@@ -405,11 +410,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Engine'
+              $ref: "#/components/schemas/Engine"
       responses:
-        '200':
+        "200":
           description: Engine updated successfully
-        '404':
+        "404":
           description: Engine not found
 
   /api/engine/remove/{id}:
@@ -426,9 +431,9 @@ paths:
           required: true
           description: The engine ID
       responses:
-        '200':
+        "200":
           description: Engine removed successfully
-        '404':
+        "404":
           description: Engine not found
 
   /api/train-history:
@@ -444,14 +449,13 @@ paths:
           required: true
           description: The date for which to retrieve train history
       responses:
-        '200':
+        "200":
           description: Train history data
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TrainHistory'
-        '404':
+                  $ref: "#/components/schemas/TrainHistory"
+        "404":
           description: Train history not found
-
