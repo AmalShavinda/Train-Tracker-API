@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const TrainSchema = new mongoose.Schema({
+  engineId: {
+    type: String,
+    required: true,
+  },
   trainName: {
     type: String,
     required: true,
