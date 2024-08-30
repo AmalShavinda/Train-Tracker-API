@@ -65,22 +65,36 @@ export const updateTrain1Location = async (req, res, next) => {
           `Train location updated to ${location}: (${latitude}, ${longitude})`
         );
 
-        //history data
-        const currentDate = new Date().toISOString().split('T')[0];
-        const historyRecord = await TrainHistory.findOneAndUpdate(
-          { trainName, date: currentDate },
-          {
-            $push: {
-              locations: {
-                location,
-                latitude,
-                longitude,
-                arrivalTime: new Date(),
+        // Get the current date
+        const currentDate = new Date().toISOString().split("T")[0];
+
+        // Check if this location is already recorded for today
+        const existingRecord = await TrainHistory.findOne({
+          trainName,
+          date: currentDate,
+          "locations.location": location,
+        });
+
+        if (!existingRecord) {
+          await TrainHistory.findOneAndUpdate(
+            { trainName, date: currentDate },
+            {
+              $push: {
+                locations: {
+                  location,
+                  latitude,
+                  longitude,
+                  arrivalTime: new Date(),
+                },
               },
             },
-          },
-          { upsert: true, new: true }
-        );
+            { upsert: true, new: true }
+          );
+
+          console.log(`Historical data updated for ${currentDate}`);
+        } else {
+          console.log(`Location already recorded for ${currentDate}`);
+        }
 
         currentIndex = (currentIndex + 1) % route1.length;
       } catch (error) {
@@ -89,7 +103,6 @@ export const updateTrain1Location = async (req, res, next) => {
     };
 
     await updateLocation();
-
     setInterval(updateLocation, 60000);
 
     console.log("Train location updates have started!");
@@ -97,6 +110,64 @@ export const updateTrain1Location = async (req, res, next) => {
     console.error("Error updating train location:", error);
   }
 };
+
+// export const updateTrain1Location = async (req, res, next) => {
+//   try {
+//     let currentIndex = 0;
+
+//     const updateLocation = async () => {
+//       try {
+//         const { latitude, longitude } = await getCoordinatesFromOSMId(
+//           route1[currentIndex].coordinates
+//         );
+//         const trainName = route1[currentIndex].trainName;
+//         const location = route1[currentIndex].location;
+
+//         await Train.findOneAndUpdate(
+//           { trainName: trainName },
+//           {
+//             location,
+//             latitude,
+//             longitude,
+//           }
+//         );
+//         console.log(trainName);
+//         console.log(
+//           `Train location updated to ${location}: (${latitude}, ${longitude})`
+//         );
+
+//         //history data
+//         const currentDate = new Date().toISOString().split('T')[0];
+//         const historyRecord = await TrainHistory.findOneAndUpdate(
+//           { trainName, date: currentDate },
+//           {
+//             $push: {
+//               locations: {
+//                 location,
+//                 latitude,
+//                 longitude,
+//                 arrivalTime: new Date(),
+//               },
+//             },
+//           },
+//           { upsert: true, new: true }
+//         );
+
+//         currentIndex = (currentIndex + 1) % route1.length;
+//       } catch (error) {
+//         console.error("Error updating train location:", error);
+//       }
+//     };
+
+//     await updateLocation();
+
+//     setInterval(updateLocation, 60000);
+
+//     console.log("Train location updates have started!");
+//   } catch (error) {
+//     console.error("Error updating train location:", error);
+//   }
+// };
 
 export const updateTrain2Location = async (req, res, next) => {
   try {
