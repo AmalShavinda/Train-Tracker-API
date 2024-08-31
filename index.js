@@ -7,11 +7,7 @@ import authRoute from "./routes/authRoute.js";
 import trainRoute from "./routes/trainRoute.js";
 import userRoute from "./routes/userRoutes.js";
 import trainHistoryRoute from "./routes/trainHistoryRoute.js";
-import {
-  updateTrain1Location,
-  updateTrain2Location,
-  updateTrain3Location,
-} from "./controllers/trainController.js";
+import { startTrainLocationUpdates } from "./controllers/trainController.js";
 import engineRoute from "./routes/engineRoute.js";
 import swaggerDocs from "./utils/swagger.js";
 
@@ -34,9 +30,7 @@ const connect = async () => {
   });
 };
 
-// updateTrain1Location();
-// updateTrain2Location();
-// updateTrain3Location();
+startTrainLocationUpdates();
 
 // Middlewares
 app.use(express.json());
